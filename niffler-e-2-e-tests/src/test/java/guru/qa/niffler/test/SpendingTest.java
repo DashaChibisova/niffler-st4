@@ -19,13 +19,6 @@ public class SpendingTest {
         Configuration.browserSize = "1980x1024";
     }
 
-    @BeforeEach
-    void doLogin() {
-        loginPage
-                .open()
-                .loginInSystem("duck", "12345");
-    }
-
     @GenerateCategory(
             category = "Обучение",
             username = "duck"
@@ -38,6 +31,9 @@ public class SpendingTest {
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
+        loginPage
+                .open()
+                .loginInSystem("duck", "12345");
         mainPage
                 .selectSpendingElement(spend.description())
                 .clickDeleteSelectedButton()
