@@ -36,17 +36,23 @@ public class SpendExtension implements BeforeEachCallback, ParameterResolver {
         GenerateSpend.class
     );
 
-    if (spend.isPresent()) {
-      GenerateSpend spendData = spend.get();
-      SpendJson spendJson = new SpendJson(
-          null,
-          new Date(),
-          spendData.category(),
-          spendData.currency(),
-          spendData.amount(),
-          spendData.description(),
-          spendData.username()
-      );
+        if (spend.isPresent()) {
+            GenerateSpend spendData = spend.get();
+            Optional<GenerateCategory> category = AnnotationSupport.findAnnotation(
+                    extensionContext.getRequiredTestMethod(),
+                    GenerateCategory.class
+            );
+            GenerateCategory categoryData = category.get();
+
+            SpendJson spendJson = new SpendJson(
+                    null,
+                    new Date(),
+                    categoryData.category(),
+                    spendData.currency(),
+                    spendData.amount(),
+                    spendData.description(),
+                    spendData.username()
+            );
 
       SpendJson created = spendApi.addSpend(spendJson).execute().body();
       extensionContext.getStore(NAMESPACE)

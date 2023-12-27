@@ -12,35 +12,35 @@ import org.junit.jupiter.api.Test;
 
 
 public class SpendingTest {
-  private final LoginPage loginPage = new LoginPage();
-  private final MainPage mainPage = new MainPage();
+    private final LoginPage loginPage = new LoginPage();
+    private final MainPage mainPage = new MainPage();
 
-  static {
-    Configuration.browserSize = "1980x1024";
-  }
+    static {
+        Configuration.browserSize = "1980x1024";
+    }
 
-  @BeforeEach
-  void doLogin() {
-    loginPage
-            .open()
-            .loginInSystem("duck","12345" );
-  }
-  @GenerateCategory(
-          category = "Обучение",
-          username = "duck"
-  )
-  @GenerateSpend(
-      username = "duck",
-      description = "QA.GURU Advanced 4",
-      amount = 72500.00,
-      category = "Обучение",
-      currency = CurrencyValues.RUB
-  )
-  @Test
-  void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
-    mainPage
-            .selectSpendingElement(spend.description())
-            .clickDeleteSelectedButton()
-            .checkSpendingElementDisappear();
-  }
+    @BeforeEach
+    void doLogin() {
+        loginPage
+                .open()
+                .loginInSystem("duck", "12345");
+    }
+
+    @GenerateCategory(
+            category = "Обучение",
+            username = "duck"
+    )
+    @GenerateSpend(
+            username = "duck",
+            description = "QA.GURU Advanced 4",
+            amount = 72500.00,
+            currency = CurrencyValues.RUB
+    )
+    @Test
+    void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
+        mainPage
+                .selectSpendingElement(spend.description())
+                .clickDeleteSelectedButton()
+                .checkSpendingElementDisappear();
+    }
 }
