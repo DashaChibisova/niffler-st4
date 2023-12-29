@@ -6,34 +6,23 @@ import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage {
-    private static final String MainPage = "http://127.0.0.1:3000/main";
+    private static final String MAIN_PAGE = "http://127.0.0.1:3000/main";
 
-    private SelenideElement redirect (){
-        return $("a[href*='redirect']");
-    }
-
-    private SelenideElement inputUsername (){
-        return $("input[name='username']");
-    }
-
-    private SelenideElement inputPassword (){
-        return $("input[name='password']");
-    }
-
-    private SelenideElement buttonLogin (){
-        return $("button[type='submit']");
-    }
+    private final SelenideElement redirect = $("a[href*='redirect']");
+    private final SelenideElement inputUsername = $("input[name='username']");
+    private final SelenideElement inputPassword = $("input[name='password']");
+    private final SelenideElement buttonLogin = $("button[type='submit']");
 
     public LoginPage open() {
-        Selenide.open(MainPage);
+        Selenide.open(MAIN_PAGE);
         return this;
     }
 
     public LoginPage loginInSystem(String username, String password) {
-        redirect().click();
-        inputUsername().setValue(username);
-        inputPassword().setValue(password);
-        buttonLogin().click();
+        redirect.click();
+        inputUsername.setValue(username);
+        inputPassword.setValue(password);
+        buttonLogin.click();
         return this;
     }
 }

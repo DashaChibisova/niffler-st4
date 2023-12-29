@@ -15,9 +15,9 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
     public static final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-    private static final OkHttpClient httpClient = new OkHttpClient.Builder().build();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder().build();
     private static final Retrofit retrofit = new Retrofit.Builder()
-            .client(httpClient)
+            .client(HTTP_CLIENT)
             .baseUrl("http://127.0.0.1:8093")
             .addConverterFactory(JacksonConverterFactory.create())
             .build();

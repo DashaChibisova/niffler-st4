@@ -7,7 +7,6 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.po.LoginPage;
 import guru.qa.niffler.po.MainPage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -31,11 +30,9 @@ public class SpendingTest {
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
-        loginPage
-                .open()
+        loginPage.open()
                 .loginInSystem("duck", "12345");
-        mainPage
-                .selectSpendingElement(spend.description())
+        mainPage.selectSpendingElement(spend.description())
                 .clickDeleteSelectedButton()
                 .checkSpendingElementDisappear();
     }

@@ -9,34 +9,24 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
 
-    private String spending = "tr";
-    private String elementSpendingTable = "td";
-
-    private SelenideElement spendingTable (){
-        return $(".spendings-table tbody");
-    }
-    private SelenideElement buttonDeleteSpendingTable (){
-        return $(byText("Delete selected"));
-    }
+    private final SelenideElement spendingTable = $(".spendings-table tbody");
+    private final SelenideElement buttonDeleteSpendingTable = $(byText("Delete selected"));
 
     public MainPage selectSpendingElement (String spendDescription) {
-        spendingTable()
-                .$$(spending)
+        spendingTable.$$("tr")
                 .find(text(spendDescription))
-                .$$(elementSpendingTable)
-                .first()
+                .$("td")
                 .click();
     return this;
     }
 
     public MainPage clickDeleteSelectedButton () {
-        buttonDeleteSpendingTable().click();
+        buttonDeleteSpendingTable.click();
     return this;
     }
 
     public MainPage checkSpendingElementDisappear () {
-        spendingTable()
-                .$$(spending)
+        spendingTable.$$("tr")
                 .shouldHave(size(0));
     return this;
     }
