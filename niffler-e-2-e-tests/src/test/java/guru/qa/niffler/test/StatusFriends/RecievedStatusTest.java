@@ -24,9 +24,9 @@ public class RecievedStatusTest extends BaseWebTest {
     void checkHaveNoFriendOnAllPeopleWhenDeclined(@User(WITH_FRIENDS) UserJson userFr, @User(INVITATION_SEND) UserJson userInv) throws Exception {
         mainPage.goToPeoplePage();
         peoplePage.checkPageUrl()
-                .checkHaveNameFriend(userFr.username()).shouldNotHave(Condition.appear);
+                .checkNotHaveNameFriend(userFr.username());
         peoplePage.checkPageUrl()
-                .checkHaveNameFriend(userInv.username()).shouldNotHave(Condition.appear);
+                .checkNotHaveNameFriend(userInv.username());
     }
 
     @Test

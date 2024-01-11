@@ -2,8 +2,7 @@ package guru.qa.niffler.po;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Condition.appear;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
@@ -32,8 +31,9 @@ public class PeoplePage {
         return this;
     }
 
-    public SelenideElement checkHaveNameFriend(String name) {
+    public SelenideElement checkNotHaveNameFriend(String name) {
         return friendsTable.$$("tr")
-                .find(text(name));
+                .find(text(name))
+                .shouldHave(disappear);
     }
 }
