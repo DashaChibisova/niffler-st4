@@ -22,14 +22,14 @@ public class InvitationStatusTest extends BaseWebTest {
     @Test
     void checkHavePendingInvitationOnAllPeople() throws Exception {
         mainPage.goToPeoplePage();
-        peoplePage.checkPage()
+        peoplePage.checkPageUrl()
                 .checkHavePendingInvitation();
     }
 
     @Test
     void checkHaveNoFriendOnFriendsPageWhenPendingInvitation() throws Exception {
         mainPage.goToFriendsPage();
-        friendsPage.checkPage()
+        friendsPage.checkPageUrl()
                 .checkNoFriendsDsc();
     }
 }

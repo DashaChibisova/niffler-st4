@@ -4,12 +4,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -50,21 +45,28 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecuti
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
-    Method parameters = context.getRequiredTestMethod();
+    Method methods = context.getRequiredTestMethod();
     Method[] declaredMethods = context.getRequiredTestClass().getDeclaredMethods();
+
+    List<Method> listMethodsBeforeEach = new ArrayList<>();
+    for (Method method : declaredMethods) {
+      if (method.isAnnotationPresent(BeforeEach.class)) {
+        listMethodsBeforeEach.add(method);
+      }
+    }
+
     Map<User.UserType, UserJson> testCandidates = new HashMap<>();
 
-    for (Method declaredMethod : declaredMethods) {
-      if(declaredMethod.isAnnotationPresent(BeforeEach.class)) {
-        reserveTestCandidate(testCandidates,declaredMethod );
+    for (Method methodBeforeEach : listMethodsBeforeEach) {
+        reserveTestCandidate(testCandidates,methodBeforeEach );
       }
-      reserveTestCandidate(testCandidates, parameters);
+      reserveTestCandidate(testCandidates, methods);
+
       context.getStore(NAMESPACE).put(context.getUniqueId(), testCandidates);
-    }
   }
 
-  private void reserveTestCandidate( Map<User.UserType, UserJson> testCandidates, Method parameters ) {
-    for (Parameter parameter : parameters.getParameters()) {
+  private void reserveTestCandidate( Map<User.UserType, UserJson> testCandidates, Method methods ) {
+    for (Parameter parameter : methods.getParameters()) {
       User annotation = parameter.getAnnotation(User.class);
       if (annotation != null && parameter.getType().isAssignableFrom(UserJson.class) && !testCandidates.containsKey(annotation.value())) {
         UserJson testCandidate = null;

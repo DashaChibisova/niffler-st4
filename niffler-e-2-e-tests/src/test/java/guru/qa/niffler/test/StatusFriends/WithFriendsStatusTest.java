@@ -17,7 +17,7 @@ public class WithFriendsStatusTest extends BaseWebTest {
         loginPage.open()
                 .loginInSystem(user.username(), user.testData().password());
         mainPage.goToPeoplePage();
-        peoplePage.checkPage()
+        peoplePage.checkPageUrl()
                 .checkHaveFriendsDsc();
     }
 
@@ -26,7 +26,7 @@ public class WithFriendsStatusTest extends BaseWebTest {
         loginPage.open()
                 .loginInSystem(user.username(), user.testData().password());
         mainPage.goToFriendsPage();
-        friendsPage.checkPage()
+        friendsPage.checkPageUrl()
                 .checkHaveFriendsDsc();
     }
 }

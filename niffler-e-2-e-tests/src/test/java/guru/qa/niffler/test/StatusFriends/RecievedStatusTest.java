@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.StatusFriends;
 
+import com.codeborne.selenide.Condition;
 import guru.qa.niffler.jupiter.User;
 import guru.qa.niffler.jupiter.UsersQueueExtension;
 import guru.qa.niffler.model.UserJson;
@@ -22,16 +23,16 @@ public class RecievedStatusTest extends BaseWebTest {
     @Test
     void checkHaveNoFriendOnAllPeopleWhenDeclined(@User(WITH_FRIENDS) UserJson userFr, @User(INVITATION_SEND) UserJson userInv) throws Exception {
         mainPage.goToPeoplePage();
-        peoplePage.checkPage()
-                .checkHaveNameFriend(userFr.username()).shouldNotHave();
-        peoplePage.checkPage()
-                .checkHaveNameFriend(userInv.username()).shouldNotHave();
+        peoplePage.checkPageUrl()
+                .checkHaveNameFriend(userFr.username()).shouldNotHave(Condition.appear);
+        peoplePage.checkPageUrl()
+                .checkHaveNameFriend(userInv.username()).shouldNotHave(Condition.appear);
     }
 
     @Test
     void checkNoFriendOnFriendsPage() throws Exception {
         mainPage.goToFriendsPage();
-        friendsPage.checkPage()
+        friendsPage.checkPageUrl()
                 .checkNoFriendsDsc();
     }
 }
