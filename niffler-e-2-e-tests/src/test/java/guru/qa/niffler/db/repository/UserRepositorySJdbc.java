@@ -2,6 +2,7 @@ package guru.qa.niffler.db.repository;
 
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.JdbcUrl;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
 import guru.qa.niffler.db.sjdbc.UserAuthEntityResultSetExtractor;
@@ -152,5 +153,15 @@ public class UserRepositorySJdbc implements UserRepository {
       udTemplate.update("DELETE FROM \"user\" WHERE id = ?", id);
       return null;
     });
+  }
+
+  @Override
+  public void updateInUserDataById(UUID idUser, String userName, CurrencyValues currency) {
+
+  }
+
+  @Override
+  public void updateInAuthById(UserAuthEntity userAuth) {
+
   }
 }
