@@ -55,7 +55,7 @@ public class LoginTest extends BaseWebTest {
   @AfterEach
   void removeUser() {
     userRepository.deleteInAuthById(userAuth.getId());
-    userRepository.deleteInUserDataById(user.getId());
+    userRepository.deleteInUserdataById(user.getId());
   }
 
   @DbUser()

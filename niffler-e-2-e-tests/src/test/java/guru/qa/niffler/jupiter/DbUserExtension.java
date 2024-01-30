@@ -16,6 +16,8 @@ public class DbUserExtension implements ParameterResolver, BeforeEachCallback, A
             = ExtensionContext.Namespace.create(DbUserExtension.class);
 
     private final UserRepository userRepository = new UserRepositoryJdbc();
+    private static final String userAuthKey = "userAuth";
+    private static final String userEntityKey = "userEntity";
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -27,11 +29,10 @@ public class DbUserExtension implements ParameterResolver, BeforeEachCallback, A
 
         Map<String, Object> users = new HashMap<>();
 
-        for (Method method : methods) {
-            DbUser dbUserData = method.getAnnotation(DbUser.class);
+            DbUser dbUserData = methods.get(0).getAnnotation(DbUser.class);
             Faker faker = new Faker();
 
-            if (dbUserData != null && !users.containsKey("userAuth")) {
+            if (dbUserData != null) {
                 String userName = dbUserData.username().isEmpty() ? faker.name().username() : dbUserData.username();
                 String userPassword = dbUserData.username().isEmpty() ? faker.internet().password() : dbUserData.password();
 
@@ -56,10 +57,10 @@ public class DbUserExtension implements ParameterResolver, BeforeEachCallback, A
                 userRepository.createInAuth(userAuth);
                 userRepository.createInUserdata(userEntity);
 
-                users.put("userAuth", userAuth);
-                users.put("userEntity", userEntity);
+                users.put(userAuthKey, userAuth);
+                users.put(userEntityKey, userEntity);
             }
-        }
+
         context.getStore(NAMESPACE)
                 .put(context.getUniqueId(), users);
     }
@@ -79,10 +80,10 @@ public class DbUserExtension implements ParameterResolver, BeforeEachCallback, A
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         Map user = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-        UserAuthEntity userAuthEntity = (UserAuthEntity) user.get("userAuth");
+        UserAuthEntity userAuthEntity = (UserAuthEntity) user.get(userAuthKey);
         userRepository.deleteInAuthById(userAuthEntity.getId());
 
-        UserEntity userEntity = (UserEntity) user.get("userEntity");
-        userRepository.deleteInUserDataById(userEntity.getId());
+        UserEntity userEntity = (UserEntity) user.get(userEntityKey);
+        userRepository.deleteInUserdataById(userEntity.getId());
     }
 }

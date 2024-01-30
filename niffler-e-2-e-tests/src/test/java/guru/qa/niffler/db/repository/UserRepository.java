@@ -12,18 +12,16 @@ public interface UserRepository {
     UserAuthEntity createInAuth(UserAuthEntity user);
 
     UserEntity createInUserdata(UserEntity user);
-  Optional<UserAuthEntity> findByIdInAuth(UUID id);
-  Optional<UserEntity> findByIdInUserdata(UUID id);
 
-  void deleteInAuthById(UUID id);
+    Optional<UserAuthEntity> findByIdInAuth(UUID id);
 
-    void deleteInUserDataById(UUID id);
+    Optional<UserEntity> findByIdInUserdata(UUID id);
+
+    void deleteInAuthById(UUID id);
+
+    void deleteInUserdataById(UUID id);
 
     void updateInUserDataById(UUID idUser, String userName, CurrencyValues currency);
 
     void updateInAuthById(UserAuthEntity userAuth);
-
-    UserEntity getUserDataByName(String userName);
-
-    UserAuthEntity getUserAuthByName(String userName);
 }
