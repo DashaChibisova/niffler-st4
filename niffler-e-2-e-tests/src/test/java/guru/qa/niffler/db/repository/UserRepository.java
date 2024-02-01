@@ -21,7 +21,7 @@ public interface UserRepository {
 
     void deleteInUserdataById(UUID id);
 
-    void updateInUserDataById(UUID idUser, String userName, CurrencyValues currency);
+    UserEntity updateInUserDataById(UserEntity user);
 
-    void updateInAuthById(UserAuthEntity userAuth);
+    UserAuthEntity updateInAuthById(UserAuthEntity userAuth);
 }
