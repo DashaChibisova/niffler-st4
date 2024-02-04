@@ -257,7 +257,7 @@ public class UserRepositoryJdbc implements UserRepository {
 
                 authorityPs.executeBatch();
                 conn.commit();
-                user.setId(user.getId());
+                return user;
             } catch (Exception e) {
                 conn.rollback();
                 throw e;
@@ -268,7 +268,6 @@ public class UserRepositoryJdbc implements UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return user;
 }
 
 

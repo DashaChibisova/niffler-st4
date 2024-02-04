@@ -15,7 +15,7 @@ public class UserRepositoryExtension implements TestInstancePostProcessor {
     for (Field field : o.getClass().getDeclaredFields()) {
       if (field.getType().isAssignableFrom(UserRepository.class)) {
         field.setAccessible(true);
-        field.set(o, System.getProperty("repository").equals("jdbc") ? new UserRepositoryJdbc() : new UserRepositorySJdbc());
+        field.set(o, ("jdbc").equals(System.getProperty("repository")) ? new UserRepositoryJdbc() : new UserRepositorySJdbc());
       }
     }
   }
