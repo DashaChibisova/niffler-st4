@@ -156,12 +156,57 @@ public class UserRepositorySJdbc implements UserRepository {
   }
 
   @Override
-  public void updateInUserDataById(UUID idUser, String userName, CurrencyValues currency) {
-
+  public UserEntity updateInUserDataById(UserEntity user) {
+      udTemplate.update(con -> {
+        PreparedStatement ps = con.prepareStatement(
+                "UPDATE \"user\" SET username = ?, currency = ? WHERE id = ?"
+        );
+        ps.setString(1, user.getUsername());
+        ps.setString(2, user.getCurrency().name());
+        ps.setObject(3, user.getId());
+        return ps;
+      });
+      return user;
   }
 
   @Override
-  public void updateInAuthById(UserAuthEntity userAuth) {
+  public UserAuthEntity updateInAuthById(UserAuthEntity user) {
+    return authTxt.execute(status -> {
+      authTemplate.update(con -> {
+        PreparedStatement ps = con.prepareStatement(
+                "UPDATE \"user\" " +
+                        "SET password = ?, enabled = ?, account_non_expired = ?, " +
+                        "account_non_locked = ?, credentials_non_expired = ? , username = ? WHERE id = ?"
+        );
+        ps.setString(1, pe.encode(user.getPassword()));
+        ps.setBoolean(2, user.getEnabled());
+        ps.setBoolean(3, user.getAccountNonExpired());
+        ps.setBoolean(4, user.getAccountNonLocked());
+        ps.setBoolean(5, user.getCredentialsNonExpired());
+        ps.setString(6, user.getUsername());
+        ps.setObject(7, user.getId());
 
+        return ps;
+      });
+
+        authTemplate.update("DELETE FROM \"authority\" WHERE user_id = ?", user.getId());
+
+      authTemplate.batchUpdate("INSERT INTO \"authority\" " +
+              "(user_id, authority) " +
+              "VALUES (?, ?)", new BatchPreparedStatementSetter() {
+        @Override
+        public void setValues(PreparedStatement ps, int i) throws SQLException {
+          ps.setObject(1, user.getId());
+          ps.setString(2, user.getAuthorities().get(i).getAuthority().name());
+        }
+
+        @Override
+        public int getBatchSize() {
+          return user.getAuthorities().size();
+        }
+      });
+
+      return user;
+    });
   }
 }
