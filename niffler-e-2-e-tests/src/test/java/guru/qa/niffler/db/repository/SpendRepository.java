@@ -5,7 +5,6 @@ import guru.qa.niffler.db.model.SpendEntity;
 import java.util.UUID;
 
 public interface SpendRepository {
-    SpendEntity createInSpend(SpendEntity spend);
+    SpendEntity create(SpendEntity spend);
 
-    void deleteInSpendByCategoryId(UUID id);
 }

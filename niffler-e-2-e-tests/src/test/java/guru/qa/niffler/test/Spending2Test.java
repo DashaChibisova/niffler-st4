@@ -36,12 +36,11 @@ public class Spending2Test extends BaseWebTest {
         spend.setDescription("GGGGGGGGG");
         spend.setCategory(cat);
 
-        spendRepository.createInSpend(spend);
+        spendRepository.create(spend);
     }
 
     @AfterEach
     void removeUser() {
-        spendRepository.deleteInSpendByCategoryId(cat.getId());
     }
 
     @DbUser()

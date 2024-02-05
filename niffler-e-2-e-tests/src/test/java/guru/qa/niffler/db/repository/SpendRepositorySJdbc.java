@@ -31,7 +31,7 @@ public class SpendRepositorySJdbc implements SpendRepository {
     }
 
     @Override
-    public SpendEntity createInSpend(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         KeyHolder kh = new GeneratedKeyHolder();
         return spendTxt.execute(status -> {
             spendTemplate.update(con -> {
@@ -65,15 +65,6 @@ public class SpendRepositorySJdbc implements SpendRepository {
             });
 
             return spend;
-        });
-    }
-
-    @Override
-    public void deleteInSpendByCategoryId(UUID id) {
-        spendTxt.execute(status -> {
-            spendTemplate.update("DELETE FROM \"spend\" WHERE category_id = ?", id);
-            spendTemplate.update("DELETE FROM \"category\" where id = ?", id);
-            return null;
         });
     }
 }

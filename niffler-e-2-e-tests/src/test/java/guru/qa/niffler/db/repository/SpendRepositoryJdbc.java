@@ -13,7 +13,7 @@ public class SpendRepositoryJdbc implements SpendRepository {
     private final DataSource spendDs = DataSourceProvider.INSTANCE.dataSource(Database.SPEND);
 
     @Override
-    public SpendEntity createInSpend(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         try (Connection conn = spendDs.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -62,38 +62,5 @@ public class SpendRepositoryJdbc implements SpendRepository {
             throw new RuntimeException(e);
         }
         return spend;
-    }
-
-
-    @Override
-    public void deleteInSpendByCategoryId(UUID id) {
-        try (Connection conn = spendDs.getConnection()) {
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement spendPs = conn.prepareStatement(
-                    "DELETE FROM \"spend\" WHERE category_id = ?");
-
-                 PreparedStatement categoryPs = conn.prepareStatement(
-                         "DELETE FROM \"category\" where id = ?")
-
-            ) {
-                spendPs.setObject(1, id);
-                spendPs.executeUpdate();
-
-                categoryPs.setObject(1, id);
-
-                categoryPs.executeUpdate();
-                conn.commit();
-
-            } catch (Exception e) {
-                conn.rollback();
-                throw e;
-            } finally {
-                conn.setAutoCommit(true);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

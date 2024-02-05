@@ -10,24 +10,19 @@ import org.junit.jupiter.api.extension.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class DatabaseSpendExtension extends SpendExtension implements ParameterResolver, BeforeEachCallback, AfterTestExecutionCallback {
+public class DatabaseSpendExtension extends SpendExtension implements ParameterResolver, BeforeEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(DatabaseSpendExtension.class);
 
     private SpendRepositoryJdbc userRepository = new SpendRepositoryJdbc();
-    private static final String spendKey = "spend";
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        List<Method> methods = new ArrayList<>();
-        methods.add(context.getRequiredTestMethod());
-        methods.addAll(Arrays.stream(context.getRequiredTestClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(BeforeEach.class))
-                .toList());
+        Method methods = context.getRequiredTestMethod();
 
-        GenerateSpend spendData = methods.get(0).getAnnotation(GenerateSpend.class);
-        GenerateCategory categoryData = methods.get(0).getAnnotation(GenerateCategory.class);
+        GenerateSpend spendData = methods.getAnnotation(GenerateSpend.class);
+        GenerateCategory categoryData = methods.getAnnotation(GenerateCategory.class);
 
         if (spendData != null && categoryData != null) {
 
@@ -41,7 +36,7 @@ public class DatabaseSpendExtension extends SpendExtension implements ParameterR
                     spendData.username());
 
             context.getStore(NAMESPACE)
-                    .put("spend", create(spendJson));
+                    .put(context.getUniqueId(), create(spendJson));
 
         }
     }
@@ -56,13 +51,7 @@ public class DatabaseSpendExtension extends SpendExtension implements ParameterR
     @Override
     public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext.getStore(DatabaseSpendExtension.NAMESPACE)
-                .get(spendKey, SpendJson.class);
-    }
-
-    @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
-        String idCategory = context.getStore(NAMESPACE).get(spendKey, SpendJson.class).category();
-        userRepository.deleteInSpendByCategoryId(UUID.fromString(idCategory));
+                .get(extensionContext.getUniqueId(), SpendJson.class);
     }
 
     @Override
@@ -80,7 +69,7 @@ public class DatabaseSpendExtension extends SpendExtension implements ParameterR
         userSpend.setDescription(spend.description());
         userSpend.setCategory(userCategory);
 
-        SpendEntity created = userRepository.createInSpend(userSpend);
+        SpendEntity created = userRepository.create(userSpend);
 
         SpendJson spendJson = new SpendJson(
                 created.getId(),
