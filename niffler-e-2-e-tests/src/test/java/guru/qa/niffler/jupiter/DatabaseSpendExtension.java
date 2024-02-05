@@ -1,10 +1,8 @@
 package guru.qa.niffler.jupiter;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.*;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
-import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.*;
@@ -12,18 +10,13 @@ import org.junit.jupiter.api.extension.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class DatabaseSpendExtension extends SpendExtension  implements ParameterResolver, BeforeEachCallback, AfterTestExecutionCallback {
-    @Override
-    SpendJson create(SpendJson spend) {
-        return null;
-    }
+public class DatabaseSpendExtension extends SpendExtension implements ParameterResolver, BeforeEachCallback, AfterTestExecutionCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE
             = ExtensionContext.Namespace.create(DatabaseSpendExtension.class);
 
-    private final SpendRepositorySJdbc userRepository = new SpendRepositorySJdbc();
+    private SpendRepositoryJdbc userRepository = new SpendRepositoryJdbc();
     private static final String spendKey = "spend";
-//    private static final String categoryKey = "category";
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -33,29 +26,23 @@ public class DatabaseSpendExtension extends SpendExtension  implements Parameter
                 .filter(method -> method.isAnnotationPresent(BeforeEach.class))
                 .toList());
 
-//        Map<String, Object> users = new HashMap<>();
-
         GenerateSpend spendData = methods.get(0).getAnnotation(GenerateSpend.class);
         GenerateCategory categoryData = methods.get(0).getAnnotation(GenerateCategory.class);
-        SpendEntity userSpend;
-        if (spendData != null && categoryData!= null) {
 
-            CategoryEntity userCategory = new CategoryEntity();
-            userCategory.setUsername(categoryData.username());
-            userCategory.setCategory(categoryData.category());
+        if (spendData != null && categoryData != null) {
 
-             userSpend = new SpendEntity();
-            userSpend.setUsername(spendData.username());
-            userSpend.setSpendDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
-            userSpend.setCurrency(spendData.currency());
-            userSpend.setAmount(spendData.amount());
-            userSpend.setDescription(spendData.description());
-            userSpend.setCategory(userCategory);
-
-            SpendEntity created = userRepository.createInSpend(userSpend);
+            SpendJson spendJson = new SpendJson(
+                    null,
+                    new java.sql.Date(Calendar.getInstance().getTime().getTime()),
+                    categoryData.category(),
+                    spendData.currency(),
+                    spendData.amount(),
+                    spendData.description(),
+                    spendData.username());
 
             context.getStore(NAMESPACE)
-                    .put(spendKey, created);
+                    .put("spend", create(spendJson));
+
         }
     }
 
@@ -63,7 +50,7 @@ public class DatabaseSpendExtension extends SpendExtension  implements Parameter
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter()
                 .getType()
-                .isAssignableFrom(SpendEntity.class);
+                .isAssignableFrom(SpendJson.class);
     }
 
     @Override
@@ -74,8 +61,36 @@ public class DatabaseSpendExtension extends SpendExtension  implements Parameter
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
-        UUID idCategory = context.getStore(NAMESPACE).get(spendKey, SpendEntity.class).getCategory().getId();
-        userRepository.deleteInSpendByCategoryId(idCategory);
+        String idCategory = context.getStore(NAMESPACE).get(spendKey, SpendJson.class).category();
+        userRepository.deleteInSpendByCategoryId(UUID.fromString(idCategory));
+    }
 
+    @Override
+    SpendJson create(SpendJson spend) {
+
+        CategoryEntity userCategory = new CategoryEntity();
+        userCategory.setUsername(spend.username());
+        userCategory.setCategory(spend.category());
+
+        SpendEntity userSpend = new SpendEntity();
+        userSpend.setUsername(spend.username());
+        userSpend.setSpendDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+        userSpend.setCurrency(spend.currency());
+        userSpend.setAmount(spend.amount());
+        userSpend.setDescription(spend.description());
+        userSpend.setCategory(userCategory);
+
+        SpendEntity created = userRepository.createInSpend(userSpend);
+
+        SpendJson spendJson = new SpendJson(
+                created.getId(),
+                created.getSpendDate(),
+                created.getCategory().getId().toString(),
+                created.getCurrency(),
+                created.getAmount(),
+                created.getDescription(),
+                created.getUsername());
+
+        return spendJson;
     }
 }

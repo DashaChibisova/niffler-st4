@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith(CategoryExtension.class)
+//@ExtendWith(CategoryExtension.class)
+@ExtendWith({DatabaseSpendExtension.class})
 public @interface GenerateCategory {
     String category();
 

@@ -60,7 +60,7 @@ public class UserRepositoryHibernate extends JpaService implements UserRepositor
 
   @Override
   public void deleteInUserdataById(UUID id) {
-    UserEntity toBeDeleted = findByIdInUserdata(id).get();
+    UserEntity toBeDeleted = Optional.of(entityManager(USERDATA).find(UserEntity.class, id)).get();
     remove(USERDATA, toBeDeleted);
   }
 
