@@ -1,7 +1,7 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Configuration;
-import guru.qa.niffler.jupiter.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.po.FriendsPage;
 import guru.qa.niffler.po.LoginPage;
 import guru.qa.niffler.po.MainPage;
