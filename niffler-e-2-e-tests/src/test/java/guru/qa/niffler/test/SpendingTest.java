@@ -2,18 +2,14 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Configuration;
 import guru.qa.niffler.jupiter.GenerateCategory;
-import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.po.LoginPage;
-import guru.qa.niffler.po.MainPage;
+import guru.qa.niffler.model.currency.CurrencyValues;
+import guru.qa.niffler.model.spend.SpendJson;
 import org.junit.jupiter.api.Test;
 
 
 public class SpendingTest extends BaseWebTest {
-    private final LoginPage loginPage = new LoginPage();
-    private final MainPage mainPage = new MainPage();
+
 
     static {
         Configuration.browserSize = "1980x1024";
@@ -31,8 +27,9 @@ public class SpendingTest extends BaseWebTest {
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
-        loginPage.open()
-                .loginInSystem("duck", "12345");
+        welcomePage.open()
+                .clickLogin();
+        loginPage.login("duck", "12345");
         mainPage.selectSpendingElement(spend.description())
                 .clickDeleteSelectedButton()
                 .checkSpendingElementDisappear();

@@ -3,7 +3,7 @@ package guru.qa.niffler.test;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.userdata.UserJson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,9 @@
 package guru.qa.niffler.jupiter;
 
-import guru.qa.niffler.api.SpendApi;
+import guru.qa.niffler.api.spend.SpendApi;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.jupiter.extension.SpendExtension;
+import guru.qa.niffler.model.spend.SpendJson;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -59,7 +60,7 @@ public class RestSpendExtension extends SpendExtension implements BeforeEachCall
     }
 
     @Override
-    SpendJson create(SpendJson spend) {
+    protected SpendJson create(SpendJson spend) {
         try {
             return spendApi.addSpend(spend).execute().body();
         } catch (IOException e) {

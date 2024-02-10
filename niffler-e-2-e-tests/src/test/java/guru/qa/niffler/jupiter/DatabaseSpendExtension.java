@@ -3,8 +3,8 @@ package guru.qa.niffler.jupiter;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.*;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
-import guru.qa.niffler.model.SpendJson;
-import org.junit.jupiter.api.BeforeEach;
+import guru.qa.niffler.jupiter.extension.SpendExtension;
+import guru.qa.niffler.model.spend.SpendJson;
 import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.Method;
@@ -55,7 +55,7 @@ public class DatabaseSpendExtension extends SpendExtension implements ParameterR
     }
 
     @Override
-    SpendJson create(SpendJson spend) {
+    protected SpendJson create(SpendJson spend) {
 
         CategoryEntity userCategory = new CategoryEntity();
         userCategory.setUsername(spend.username());

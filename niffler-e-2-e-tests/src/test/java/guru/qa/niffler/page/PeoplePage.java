@@ -1,6 +1,7 @@
-package guru.qa.niffler.po;
+package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -12,11 +13,12 @@ public class PeoplePage {
 
     private final SelenideElement friendsTable = $(".people-content tbody");
 
+    @Step("Проверить, что мы на нужной странице")
     public PeoplePage checkPageUrl() {
         webdriver().shouldHave(url(PEOPLE_PAGE));
         return this;
     }
-
+    @Step("Проверить, что есть друзья")
     public PeoplePage checkHaveFriendsDsc() {
         friendsTable.$$("tr")
                 .find(text("You are friends"))
@@ -24,6 +26,7 @@ public class PeoplePage {
         return this;
     }
 
+    @Step("Проверить, что друг в статусе ожидания")
     public PeoplePage checkHavePendingInvitation() {
         friendsTable.$$("tr")
                 .find(text("Pending invitation"))
@@ -31,6 +34,7 @@ public class PeoplePage {
         return this;
     }
 
+    @Step("Проверить, что друга с таким именем нет в списке друзей")
     public SelenideElement checkNotHaveNameFriend(String name) {
         return friendsTable.$$("tr")
                 .find(text(name))

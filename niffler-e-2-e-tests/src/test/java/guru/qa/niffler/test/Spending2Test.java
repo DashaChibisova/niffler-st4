@@ -1,11 +1,10 @@
 package guru.qa.niffler.test;
 
-import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.SpendRepository;
 import guru.qa.niffler.jupiter.SpendRepositoryExtension;
 import guru.qa.niffler.jupiter.annotation.DbUser;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.currency.CurrencyValues;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,8 +45,9 @@ public class Spending2Test extends BaseWebTest {
     @DbUser()
     @Test
     void checkSpendRepository() {
-        loginPage.open()
-                .loginInSystem("duck", "12345");
+        welcomePage.open()
+                .clickLogin();
+        loginPage.login("duck", "12345");
         mainPage.selectSpendingElement(spend.getDescription())
                 .clickDeleteSelectedButton()
                 .checkSpendingElementDisappear();

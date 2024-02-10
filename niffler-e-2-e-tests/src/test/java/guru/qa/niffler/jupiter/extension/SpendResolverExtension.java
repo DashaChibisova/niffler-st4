@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.jupiter.RestSpendExtension;
+import guru.qa.niffler.model.spend.SpendJson;
 import org.junit.jupiter.api.extension.*;
 
 public class SpendResolverExtension implements ParameterResolver {
