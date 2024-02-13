@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.SpendingTable;
 import io.qameta.allure.Step;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static guru.qa.niffler.condition.PhotoCondition.photoFromClasspath;
 
 public class MainPage extends BasePage<MainPage> {
 
@@ -27,7 +29,7 @@ public class MainPage extends BasePage<MainPage> {
   private final SelenideElement addSpendingBtn  = $(byText("Add new spending"));
 
   //History of spendings
-  private final SelenideElement spendingTable = $(".spendings-table tbody");
+  private final SelenideElement spendingTableS = $(".spendings-table tbody");
   private final SelenideElement deleteSpendingTableBtn = $(byText("Delete selected"));
   private final SelenideElement todayBtn  = $(byText("Today"));
   private final SelenideElement lastWeekBtn  = $(byText("Last week"));
@@ -37,10 +39,13 @@ public class MainPage extends BasePage<MainPage> {
   //statistic
   private final SelenideElement statistic  = $(".main-content__section-stats");
 
+  private final SelenideElement avatar = $(".header__avatar");
+  private final SelenideElement statistics = $(".main-content__section.main-content__section-stats");
+  private final SpendingTable spendingTable = new SpendingTable();
 
   @Step("Выбрать статью расходов")
   public MainPage selectSpendingElement(String spendDescription) {
-    spendingTable.$$("tr")
+    spendingTableS.$$("tr")
             .find(text(spendDescription))
             .$("td")
             .click();
@@ -55,7 +60,7 @@ public class MainPage extends BasePage<MainPage> {
 
   @Step("Проверить, что расход удалился")
   public MainPage checkSpendingElementDisappear() {
-    spendingTable.$$("tr")
+    spendingTableS.$$("tr")
             .shouldHave(size(0));
     return this;
   }
@@ -124,5 +129,15 @@ public class MainPage extends BasePage<MainPage> {
   public MainPage checkThatStatisticDisplayed() {
     statistic.should(visible);
     return  this;
+  }
+
+  @Step("check avatar")
+  public MainPage checkAvatar(String imageName) {
+    avatar.shouldHave(photoFromClasspath(imageName));
+    return this;
+  }
+
+  public SpendingTable getSpendingTable() {
+    return spendingTable;
   }
 }

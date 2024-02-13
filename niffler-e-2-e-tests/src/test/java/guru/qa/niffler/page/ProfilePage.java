@@ -1,12 +1,17 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.message.SuccessMsg;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class ProfilePage extends BasePage<ProfilePage> {
+    public static final String PAGE_URL = CFG.frontUrl() + "/profile";
+
+    private final SelenideElement avatarInput = $("input[type='file']");
+    private final SelenideElement avatar = $(".profile__avatar");
 
     //user data
     private final SelenideElement inputUsername = $("input[name='firstname']");
@@ -16,6 +21,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
     //add new category
     private final SelenideElement inputCategory = $("input[name='category']");
     private final SelenideElement createBtn = $(byText("Create"));
+
 
     @Step("Ввести имя")
     public ProfilePage inputUsername(String username) {
@@ -46,5 +52,12 @@ public class ProfilePage extends BasePage<ProfilePage> {
         createBtn.click();
         return this;
     }
-}
 
+    public ProfilePage addAvatar(String imagePath) {
+        avatar.click();
+        avatarInput.uploadFromClasspath(imagePath);
+        submitBtn.click();
+        checkMessage(SuccessMsg.PROFILE_MSG);
+        return this;
+    }
+}
