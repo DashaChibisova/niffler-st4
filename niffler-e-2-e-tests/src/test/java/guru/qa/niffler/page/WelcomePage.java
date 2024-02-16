@@ -10,7 +10,10 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class WelcomePage extends BasePage<WelcomePage> {
     private static final String WELCOME_PAGE = "http://127.0.0.1:3000/";
+    public static final String URL = CFG.frontUrl();
 
+    private final SelenideElement loginButton = $("a[href*='redirect']");
+    private final SelenideElement registerButton = $("a[href*='register']");
 
     private final SelenideElement loginBtn = $(byLinkText("Login"));
     private final SelenideElement registerBtn = $(byLinkText("Register"));
@@ -37,18 +40,6 @@ public class WelcomePage extends BasePage<WelcomePage> {
         headerText.shouldHave(text("Welcome to magic journey with Niffler. The coin keeper"));
         return this;
     }
-import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
-
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-
-public class WelcomePage extends BasePage<WelcomePage> {
-
-  public static final String URL = CFG.frontUrl();
-
-  private final SelenideElement loginButton = $("a[href*='redirect']");
-  private final SelenideElement registerButton = $("a[href*='register']");
 
   @Step("Redirect to login page")
   public LoginPage doLogin() {

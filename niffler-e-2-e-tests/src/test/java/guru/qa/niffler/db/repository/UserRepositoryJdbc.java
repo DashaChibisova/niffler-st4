@@ -7,7 +7,7 @@ import guru.qa.niffler.db.model.AuthorityEntity;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
-import guru.qa.niffler.db.model.*;
+import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -221,5 +221,74 @@ public class UserRepositoryJdbc implements UserRepository {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  //обе таблицы
+  @Override
+  public UserAuthEntity updateInAuthById(UserAuthEntity user) {
+    try (Connection conn = authDs.getConnection()) {
+      conn.setAutoCommit(false);
+
+      try (
+              PreparedStatement userPs = conn.prepareStatement(
+                      "UPDATE \"user\" " +
+                              "SET password = ?, enabled = ?, account_non_expired = ?, " +
+                              "account_non_locked = ?, credentials_non_expired = ? , username = ? WHERE id = ?");
+              PreparedStatement authorityDelete = conn.prepareStatement(
+                      "DELETE FROM \"authority\" where user_id = ?");
+              PreparedStatement authorityPs = conn.prepareStatement(
+                      "INSERT INTO \"authority\" " +
+                              "(user_id, authority) " +
+                              "VALUES (?, ?)");
+
+      ) {
+
+        userPs.setObject(1, pe.encode(user.getPassword()));
+        userPs.setBoolean(2, user.getEnabled());
+        userPs.setBoolean(3, user.getAccountNonExpired());
+        userPs.setBoolean(4, user.getAccountNonLocked());
+        userPs.setBoolean(5, user.getCredentialsNonExpired());
+        userPs.setObject(6, user.getUsername());
+        userPs.setObject(7, user.getId());
+        userPs.executeUpdate();
+
+        authorityDelete.setObject(1, user.getId());
+        authorityDelete.executeUpdate();
+
+        for (Authority authority : Authority.values()) {
+          authorityPs.setObject(1, user.getId());
+          authorityPs.setString(2, authority.name());
+          authorityPs.addBatch();
+          authorityPs.clearParameters();
+        }
+
+        authorityPs.executeBatch();
+        conn.commit();
+        return user;
+      } catch (Exception e) {
+        conn.rollback();
+        throw e;
+      } finally {
+        conn.setAutoCommit(true);
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public UserEntity updateInUserDataById(UserEntity user) {
+    try (Connection conn = udDs.getConnection();
+         PreparedStatement ps = conn.prepareStatement(
+                 "UPDATE \"user\" SET username = ?, currency = ? WHERE id = ?")) {
+      ps.setObject(1, user.getUsername());
+      ps.setObject(2, user.getCurrency().name());
+      ps.setObject(3, user.getId());
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return user;
   }
 }

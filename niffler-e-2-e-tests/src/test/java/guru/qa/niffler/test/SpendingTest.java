@@ -2,18 +2,15 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.MainPage;
-import io.qameta.allure.Allure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class SpendingTest extends BaseWebTest {
@@ -31,13 +28,13 @@ public class SpendingTest extends BaseWebTest {
     $("button[type='submit']").click();
   }
 
-  @GenerateSpend(
-      username = "duck",
-      description = "QA.GURU Advanced 4",
-      amount = 72500.00,
-      category = "Обучение",
-      currency = CurrencyValues.RUB
-  )
+//  @GenerateSpend(
+//      username = "duck",
+//      description = "QA.GURU Advanced 4",
+//      amount = 72500.00,
+//      category = "Обучение",
+//      currency = CurrencyValues.RUB
+//  )
   @DisabledByIssue("74")
   @Test
   void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
@@ -49,10 +46,8 @@ public class SpendingTest extends BaseWebTest {
         .click();
 
     new MainPage()
-        .getSpendingTable()
-        .checkTableContains(spend);
             .getSpendingTable()
-            .checkSpends(spend);
+            .checkTableContains(spend);
 
 //    Allure.step("Delete spending", () -> $(byText("Delete selected"))
 //        .click());

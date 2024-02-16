@@ -1,6 +1,8 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.page.message.SuccessMsg;
 import io.qameta.allure.Step;
 
@@ -9,13 +11,10 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class ProfilePage extends BasePage<ProfilePage> {
-    public static final String PAGE_URL = CFG.frontUrl() + "/profile";
-
     public static final String URL = CFG.frontUrl() + "/profile";
 
     private final SelenideElement avatarInput = $("input[type='file']");
@@ -26,8 +25,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
     private final SelenideElement inputSurname = $("input[name='surname']");
     private final SelenideElement submitBtn = $("button[type='submit']");
     private final SelenideElement userName = $(".avatar-container figcaption");
-    private final SelenideElement avatar = $(".profile__avatar");
-    private final SelenideElement avatarInput = $("input[type='file']");
     private final SelenideElement nameInput = $("input[name='firstname']");
     private final SelenideElement surnameInput = $("input[name='surname']");
     private final SelenideElement categoryInput = $("input[name='category']");
@@ -35,6 +32,10 @@ public class ProfilePage extends BasePage<ProfilePage> {
     private final SelenideElement submitButton = $(byText("Submit"));
     private final SelenideElement createCategoryButton = $(byText("Create"));
     private final ElementsCollection existingCategories = $$(".categories__list li ");
+
+    //add new category
+    private final SelenideElement inputCategory = $("input[name='category']");
+    private final SelenideElement createBtn = $(byText("Create"));
 
     @Step("Fill profile page with rate: name: {0}, surname: {1}, currency: {2}")
     public ProfilePage fillProfile(String name, String surname, CurrencyValues currency) {
@@ -56,11 +57,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
         surnameInput.setValue(surname);
         return this;
     }
-
-    //add new category
-    private final SelenideElement inputCategory = $("input[name='category']");
-    private final SelenideElement createBtn = $(byText("Create"));
-
 
     @Step("Ввести имя")
     public ProfilePage inputUsername(String username) {
@@ -92,13 +88,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return this;
     }
 
-    public ProfilePage addAvatar(String imagePath) {
-        avatar.click();
-        avatarInput.uploadFromClasspath(imagePath);
-        submitBtn.click();
-        checkMessage(SuccessMsg.PROFILE_MSG);
-        return this;
-    }
     @Step("Set currency: {0}")
     public ProfilePage setCurrency(CurrencyValues currency) {
         currencySelect.click();

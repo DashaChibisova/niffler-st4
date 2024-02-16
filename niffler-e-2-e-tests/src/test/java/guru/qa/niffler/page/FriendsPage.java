@@ -1,9 +1,14 @@
 package guru.qa.niffler.page;
 
-<<<<<<< HEAD
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.userdata.UserJson;
+import guru.qa.niffler.page.component.PeopleTable;
 import io.qameta.allure.Step;
 
+import java.util.List;
+
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.webdriver;
@@ -11,6 +16,10 @@ import static com.codeborne.selenide.WebDriverConditions.url;
 
 public class FriendsPage extends BasePage<FriendsPage> {
     private static final String FRIENDS_PAGE = "http://127.0.0.1:3000/friends";
+    public static final String URL = CFG.frontUrl() + "/friends";
+
+    private final SelenideElement tableContainer = $(".people-content");
+    private final PeopleTable table = new PeopleTable($(".table"));
 
     private final SelenideElement friendsTable = $(".people-content tbody");
 
@@ -35,25 +44,6 @@ public class FriendsPage extends BasePage<FriendsPage> {
                 .shouldHave(disappear);
         return this;
     }
-=======
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.component.PeopleTable;
-import io.qameta.allure.Step;
-
-import java.util.List;
-
-import static com.codeborne.selenide.CollectionCondition.size;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
-
-public class FriendsPage extends BasePage<FriendsPage> {
-
-  public static final String URL = CFG.frontUrl() + "/friends";
-
-  private final SelenideElement tableContainer = $(".people-content");
-  private final PeopleTable table = new PeopleTable($(".table"));
 
   @Step("Check that the page is loaded")
   @Override
@@ -93,5 +83,4 @@ public class FriendsPage extends BasePage<FriendsPage> {
         .click();
     return this;
   }
->>>>>>> acd1858 (Allure Customization (vol 8))
 }

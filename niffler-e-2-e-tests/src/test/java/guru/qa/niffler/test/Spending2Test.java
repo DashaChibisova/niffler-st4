@@ -47,7 +47,7 @@ public class Spending2Test extends BaseWebTest {
     void checkSpendRepository() {
         welcomePage.open()
                 .clickLogin();
-        loginPage.login("duck", "12345");
+        loginPage.fillLoginPage("duck", "12345");
         mainPage.selectSpendingElement(spend.getDescription())
                 .clickDeleteSelectedButton()
                 .checkSpendingElementDisappear();

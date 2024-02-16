@@ -27,7 +27,7 @@ public class Spending3Test extends BaseWebTest {
     void spendingShouldBeDeletedByButtonDeleteSpending(SpendJson spend) {
         welcomePage.open()
                 .clickLogin();
-        loginPage.login("duck", "12345");
+        loginPage.fillLoginPage("duck", "12345");
         mainPage.selectSpendingElement(spend.description())
                 .clickDeleteSelectedButton()
                 .checkSpendingElementDisappear();
