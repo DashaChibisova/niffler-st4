@@ -29,7 +29,7 @@ public class MainPage extends BasePage<MainPage> {
   private final SelenideElement addSpendingBtn  = $(byText("Add new spending"));
 
   //History of spendings
-  private final SelenideElement spendingTableS = $(".spendings-table tbody");
+  private final SelenideElement spending = $(".spendings-table tbody");
   private final SelenideElement deleteSpendingTableBtn = $(byText("Delete selected"));
   private final SelenideElement todayBtn  = $(byText("Today"));
   private final SelenideElement lastWeekBtn  = $(byText("Last week"));
@@ -45,7 +45,7 @@ public class MainPage extends BasePage<MainPage> {
 
   @Step("Выбрать статью расходов")
   public MainPage selectSpendingElement(String spendDescription) {
-    spendingTableS.$$("tr")
+    spending.$$("tr")
             .find(text(spendDescription))
             .$("td")
             .click();
@@ -60,7 +60,7 @@ public class MainPage extends BasePage<MainPage> {
 
   @Step("Проверить, что расход удалился")
   public MainPage checkSpendingElementDisappear() {
-    spendingTableS.$$("tr")
+    spending.$$("tr")
             .shouldHave(size(0));
     return this;
   }
@@ -139,5 +139,25 @@ public class MainPage extends BasePage<MainPage> {
 
   public SpendingTable getSpendingTable() {
     return spendingTable;
+  }
+
+  @Step("Выбрать статью расходов по тексту")
+  public MainPage selectSpendingElementByText(String text) {
+    spending.$$("tr")
+            .find(text(text))
+            .$$("td")
+            .first()
+            .click();
+    return this;
+  }
+
+  @Step("Выбрать статью расходов по индексу")
+  public MainPage selectSpendingElementByIndex(int index) {
+    spending.$$("tr")
+            .get(index-1)
+            .$$("td")
+            .first()
+            .click();
+    return this;
   }
 }
