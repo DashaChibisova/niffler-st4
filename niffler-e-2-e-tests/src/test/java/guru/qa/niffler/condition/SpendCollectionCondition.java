@@ -3,53 +3,74 @@ package guru.qa.niffler.condition;
 import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Driver;
+import com.codeborne.selenide.impl.CollectionSource;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.model.spend.SpendJson;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SpendCollectionCondition {
 
-  public static CollectionCondition spends(SpendJson... expectedSPends) {
-    return new CollectionCondition() {
+    public static CollectionCondition spends(SpendJson... expectedSPends) {
+        return new CollectionCondition() {
 
-      @Nonnull
-      @Override
-      public CheckResult check(Driver driver, List<WebElement> elements) {
-        if (elements.size() != expectedSPends.length) {
-          return CheckResult.rejected("Incorrect table size", elements);
-        }
+            @Nonnull
+            @Override
+            public CheckResult check(Driver driver, List<WebElement> elements) {
+                if (elements.size() != expectedSPends.length) {
+                    return CheckResult.rejected("Incorrect table size", elements);
+                }
 
+                for (WebElement element : elements) {
 
-        for (WebElement element : elements) {
+                    List<WebElement> tds = element.findElements(By.cssSelector("td"));
+                    boolean checkPassed = false;
 
-          List<WebElement> tds = element.findElements(By.cssSelector("td"));
-          boolean checkPassed = false;
+                    Map<String, String> spendActual = new HashMap<>();
+                    Map<String, String> spendExpected = new HashMap<>();
 
-          for (SpendJson expectedSPend : expectedSPends) {
-            checkPassed = tds.get(4).getText().equals(expectedSPend.category());
-            if (checkPassed) {
-              break;
+                    spendActual.put("category", tds.get(4).getText());
+                    spendActual.put("currency", CurrencyValues.valueOf(tds.get(3).getText()).toString());
+                    spendActual.put("amount", String.valueOf(Double.parseDouble(tds.get(2).getText())));
+                    spendActual.put("description", tds.get(5).getText());
+
+                    for (SpendJson expectedSPend : expectedSPends) {
+                        spendExpected.put("category", expectedSPend.category());
+                        spendExpected.put("currency", expectedSPend.currency().toString());
+                        spendExpected.put("amount", String.valueOf(expectedSPend.amount()));
+                        spendExpected.put("description", expectedSPend.description());
+
+                        if (spendActual.equals(spendExpected)) {
+                            checkPassed = true;
+                            break;
+                        }
+                    }
+
+                    if (checkPassed) {
+                        return CheckResult.accepted();
+                    } else {
+                        String rejected = "Expected: " + spendExpected + "\nActual: " + spendActual;
+                        return CheckResult.rejected("Incorrect spends content", rejected);
+                    }
+                }
+                return super.check(driver, elements);
             }
-          }
 
-          if (checkPassed) {
-            return CheckResult.accepted();
-          } else {
-            return CheckResult.rejected("Incorrect spends content", elements);
-          }
-        }
+            @Override
+            public void fail(CollectionSource collection, CheckResult lastCheckResult, Exception cause, long timeoutMs) {
+                throw new UnsupportedOperationException(lastCheckResult.getActualValue().toString());
 
+            }
 
-        return super.check(driver, elements);
-      }
-
-      @Override
-      public boolean missingElementSatisfiesCondition() {
-        return false;
-      }
-    };
-  }
+            @Override
+            public boolean missingElementSatisfiesCondition() {
+                return false;
+            }
+        };
+    }
 }
