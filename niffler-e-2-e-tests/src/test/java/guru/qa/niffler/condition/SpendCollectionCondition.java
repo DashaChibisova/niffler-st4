@@ -25,9 +25,8 @@ public class SpendCollectionCondition {
                 if (elements.size() != expectedSPends.length) {
                     return CheckResult.rejected("Incorrect table size", elements);
                 }
-
-                for (WebElement element : elements) {
-
+                for (var i = 0; i < expectedSPends.length; i++) {
+                    WebElement element = elements.get(i);
                     List<WebElement> tds = element.findElements(By.cssSelector("td"));
                     boolean checkPassed = false;
 
@@ -39,16 +38,15 @@ public class SpendCollectionCondition {
                     spendActual.put("amount", String.valueOf(Double.parseDouble(tds.get(2).getText())));
                     spendActual.put("description", tds.get(5).getText());
 
-                    for (SpendJson expectedSPend : expectedSPends) {
-                        spendExpected.put("category", expectedSPend.category());
-                        spendExpected.put("currency", expectedSPend.currency().toString());
-                        spendExpected.put("amount", String.valueOf(expectedSPend.amount()));
-                        spendExpected.put("description", expectedSPend.description());
+                    SpendJson expectedSPend = expectedSPends[i];
 
-                        if (spendActual.equals(spendExpected)) {
-                            checkPassed = true;
-                            break;
-                        }
+                    spendExpected.put("category", expectedSPend.category());
+                    spendExpected.put("currency", expectedSPend.currency().toString());
+                    spendExpected.put("amount", String.valueOf(expectedSPend.amount()));
+                    spendExpected.put("description", expectedSPend.description());
+
+                    if (spendActual.equals(spendExpected)) {
+                        checkPassed = true;
                     }
 
                     if (checkPassed) {

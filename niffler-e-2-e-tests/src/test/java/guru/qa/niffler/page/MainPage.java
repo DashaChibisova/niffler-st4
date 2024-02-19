@@ -145,8 +145,7 @@ public class MainPage extends BasePage<MainPage> {
   public MainPage selectSpendingElementByText(String text) {
     spending.$$("tr")
             .find(text(text))
-            .$$("td")
-            .first()
+            .$("td")
             .click();
     return this;
   }
@@ -155,8 +154,7 @@ public class MainPage extends BasePage<MainPage> {
   public MainPage selectSpendingElementByIndex(int index) {
     spending.$$("tr")
             .get(index-1)
-            .$$("td")
-            .first()
+            .$("td")
             .click();
     return this;
   }
