@@ -25,10 +25,12 @@ public class SpendCollectionCondition {
                 if (elements.size() != expectedSPends.length) {
                     return CheckResult.rejected("Incorrect table size", elements);
                 }
+
+                StringBuilder failed = new StringBuilder();
+
                 for (var i = 0; i < expectedSPends.length; i++) {
                     WebElement element = elements.get(i);
                     List<WebElement> tds = element.findElements(By.cssSelector("td"));
-                    boolean checkPassed = false;
 
                     Map<String, String> spendActual = new HashMap<>();
                     Map<String, String> spendExpected = new HashMap<>();
@@ -45,18 +47,15 @@ public class SpendCollectionCondition {
                     spendExpected.put("amount", String.valueOf(expectedSPend.amount()));
                     spendExpected.put("description", expectedSPend.description());
 
-                    if (spendActual.equals(spendExpected)) {
-                        checkPassed = true;
-                    }
-
-                    if (checkPassed) {
-                        return CheckResult.accepted();
-                    } else {
-                        String rejected = "Expected: " + spendExpected + "\nActual: " + spendActual;
-                        return CheckResult.rejected("Incorrect spends content", rejected);
+                    if (!spendActual.equals(spendExpected)) {
+                        failed.append( "Expected: " + spendExpected + "\nActual: " + spendActual);
                     }
                 }
-                return super.check(driver, elements);
+                if (failed.isEmpty()) {
+                    return CheckResult.accepted();
+                } else {
+                    return CheckResult.rejected("Incorrect spends content", failed.toString());
+                }
             }
 
             @Override
