@@ -17,7 +17,7 @@ public class InvitationStatusTest extends BaseWebTest {
     void doLogin(@User(INVITATION_SEND) UserJson user) {
         welcomePage.open()
                 .clickLogin();
-        loginPage.login(user.username(), user.testData().password());
+        loginPage.fillLoginPage(user.username(), user.testData().password());
     }
 
     @Test

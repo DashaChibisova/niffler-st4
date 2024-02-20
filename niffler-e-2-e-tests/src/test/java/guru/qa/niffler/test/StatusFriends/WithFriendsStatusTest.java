@@ -17,7 +17,7 @@ public class WithFriendsStatusTest extends BaseWebTest {
     void checkHaveFriendOnAllPeople(@User(WITH_FRIENDS) UserJson user) throws Exception {
         welcomePage.open()
                 .clickLogin();
-        loginPage.login(user.username(), user.testData().password());
+        loginPage.fillLoginPage(user.username(), user.testData().password());
         mainPage.goToPeoplePage();
         peoplePage.checkPageUrl()
                 .checkHaveFriendsDsc();
@@ -27,7 +27,7 @@ public class WithFriendsStatusTest extends BaseWebTest {
     void checkHaveFriendOnFriendsPage(@User(WITH_FRIENDS) UserJson user) throws Exception {
         welcomePage.open()
                 .clickLogin();
-        loginPage.login(user.username(), user.testData().password());
+        loginPage.fillLoginPage(user.username(), user.testData().password());
         mainPage.goToFriendsPage();
         friendsPage.checkPageUrl()
                 .checkHaveFriendsDsc();
