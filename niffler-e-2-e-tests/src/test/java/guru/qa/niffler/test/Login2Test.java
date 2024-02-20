@@ -2,8 +2,8 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.db.model.*;
-import guru.qa.niffler.jupiter.DbUser;
 import guru.qa.niffler.jupiter.DbUserExtension;
+import guru.qa.niffler.jupiter.annotation.DbUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
