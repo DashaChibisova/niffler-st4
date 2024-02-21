@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.jupiter.annotation.User.UserType.WITH_FRIENDS;
 
 @ExtendWith(UsersQueueExtension.class)
-public class FriendsTest {
+public class Friends2Test {
 
   @BeforeEach
   void doLogin(@User(WITH_FRIENDS) UserJson user) {
