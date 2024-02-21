@@ -20,9 +20,9 @@
 </head>
 <body>
 
-<h5>SQL Query</h5>
+<h5>Json Query</h5>
 <div>
-    <pre><code>${data.sql}</code></pre>
+    <pre><code>${data.json}</code></pre>
 </div>
 
 </body>

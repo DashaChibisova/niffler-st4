@@ -17,7 +17,7 @@ public class JsonAttachment implements AttachmentData {
         return name;
     }
 
-    public String getSql() {
+    public String getJson() {
         return json;
     }
 }
