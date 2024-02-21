@@ -1,6 +1,8 @@
 package guru.qa.niffler.jupiter;
 
 import com.github.javafaker.Faker;
+import guru.qa.niffler.db.logging.JsonAllureAppender;
+import guru.qa.niffler.db.logging.JsonAttachment;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.UserRepository;
 import guru.qa.niffler.db.repository.UserRepositoryJdbc;
@@ -56,6 +58,9 @@ public class DbUserExtension implements ParameterResolver, BeforeEachCallback, A
                 userEntity.setCurrency(CurrencyValues.RUB);
                 userRepository.createInAuth(userAuth);
                 userRepository.createInUserdata(userEntity);
+
+                JsonAllureAppender jsonAllureAppender = new JsonAllureAppender();
+                jsonAllureAppender.logJson(userEntityKey, userEntity.toString());
 
                 users.put(userAuthKey, userAuth);
                 users.put(userEntityKey, userEntity);

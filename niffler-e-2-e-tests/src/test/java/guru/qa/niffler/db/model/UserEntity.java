@@ -116,4 +116,18 @@ public class UserEntity {
   public final int hashCode() {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
   }
+
+  @Override
+  public String toString() {
+    return "UserEntity{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", currency=" + currency +
+            ", firstname='" + firstname + '\'' +
+            ", surname='" + surname + '\'' +
+            ", photo=" + Arrays.toString(photo) +
+            ", friends=" + friends +
+            ", invites=" + invites +
+            '}';
+  }
 }
