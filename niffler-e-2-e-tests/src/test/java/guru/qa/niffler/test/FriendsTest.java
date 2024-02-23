@@ -2,9 +2,11 @@ package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.DbUser;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.jupiter.extension.ContextHolderExtension;
+import guru.qa.niffler.jupiter.extension.CreateUserExtension;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.FriendsPage;
@@ -14,13 +16,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.jupiter.annotation.User.UserType.WITH_FRIENDS;
 
-@ExtendWith({ContextHolderExtension.class, ApiLoginExtension.class, UsersQueueExtension.class})
+@ExtendWith({ContextHolderExtension.class, CreateUserExtension.class,  ApiLoginExtension.class})
 //@ExtendWith(UsersQueueExtension.class)
 public class FriendsTest {
 
   @Test
-  @ApiLogin(username = "duck", password = "12345")
-  void friendsTableShouldNotBeEmpty0(@User(WITH_FRIENDS) UserJson user) throws Exception {
+  @ApiLogin(user = @DbUser)
+  void friendsTableShouldNotBeEmpty0() throws Exception {
     Selenide.open(FriendsPage.URL);
     System.out.println("");
   }
