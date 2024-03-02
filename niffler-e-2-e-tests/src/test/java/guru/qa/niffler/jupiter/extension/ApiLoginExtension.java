@@ -6,6 +6,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.api.cookie.ThreadSafeCookieManager;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.utils.OauthUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
+
+import java.util.Map;
 
 public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
@@ -34,7 +37,15 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
       final String codeChallenge = OauthUtils.generateCodeChallange(codeVerifier);
       setCodeVerifier(extensionContext, codeVerifier);
       setCodChallenge(extensionContext, codeChallenge);
-      authApiClient.doLogin(extensionContext, apiLogin.username(), apiLogin.password());
+
+      if (apiLogin.password().isEmpty() && apiLogin.username().isEmpty()) {
+        Map createdUser = extensionContext.getStore(CreateUserExtension.DB_CREATE_USER_NAMESPACE)
+                .get(extensionContext.getUniqueId(), Map.class);
+        UserAuthEntity userAuthEntity = ((UserAuthEntity) createdUser.get("auth"));
+        authApiClient.doLogin(extensionContext, userAuthEntity.getUsername(), userAuthEntity.getPassword());
+      } else {
+        authApiClient.doLogin(extensionContext, apiLogin.username(), apiLogin.password());
+      }
 
       Selenide.open(CFG.frontUrl());
       SessionStorage sessionStorage = Selenide.sessionStorage();
