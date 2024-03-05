@@ -250,7 +250,7 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
         responseObserver.onCompleted();
     }
 
-    @Override //??
+    @Override
     public void postAddFriend(InvitationRequest request,
                               StreamObserver<User> responseObserver) {
         UserEntity currentUser = getRequiredUser(request.getUsername());

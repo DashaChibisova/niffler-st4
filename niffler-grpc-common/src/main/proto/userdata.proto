@@ -33,12 +33,11 @@ message User{
 }
 
 enum FriendState {
-    INVITE_SENT = 0;
-    INVITE_RECEIVED = 1;
-    FRIEND = 2;
+  UNSPECIF = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
 }
-
-
 
 message UserName {
   string username = 1;

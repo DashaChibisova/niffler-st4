@@ -134,4 +134,22 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
 //    assertEquals(FriendState.FRIEND, user.getFriendState());
   }
 
+  @Test
+  void checkPostAddFriend() {
+
+    final Friend friend = Friend.newBuilder()
+            .setUsername("valentin_153")
+            .build();
+
+    final InvitationRequest invitationRequest = InvitationRequest.newBuilder()
+            .setUsername("3333666")
+            .setInvitation(friend)
+            .build();
+
+    final User user = blockingStubUser.postAddFriend(invitationRequest);
+
+    assertEquals("valentin_153", user.getUsername());
+    assertEquals(CurrencyValues.RUB, user.getCurrency());
+    assertEquals(FriendState.INVITE_SENT, user.getFriendState());
+  }
 }
