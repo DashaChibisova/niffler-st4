@@ -9,8 +9,9 @@ import guru.qa.niffler.db.repository.UserRepository;
 import guru.qa.niffler.db.repository.UserRepositoryHibernate;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.model.TestData;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.utils.DataUtils;
+
 
 import java.util.Arrays;
 
@@ -55,7 +56,7 @@ public class DataBaseCreteUserExtension extends CreateUserExtension {
         userEntity.getUsername(),
         userEntity.getFirstname(),
         userEntity.getSurname(),
-        guru.qa.niffler.model.CurrencyValues.valueOf(userEntity.getCurrency().name()),
+        guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
         userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
         null,
         new TestData(

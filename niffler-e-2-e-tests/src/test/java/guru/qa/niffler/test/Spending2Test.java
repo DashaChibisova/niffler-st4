@@ -3,7 +3,6 @@ package guru.qa.niffler.test;
 import guru.qa.niffler.db.model.*;
 import guru.qa.niffler.db.repository.SpendRepository;
 import guru.qa.niffler.jupiter.SpendRepositoryExtension;
-import guru.qa.niffler.jupiter.annotation.DbUser;
 import guru.qa.niffler.model.currency.CurrencyValues;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,6 @@ public class Spending2Test extends BaseWebTest {
     void removeUser() {
     }
 
-    @DbUser()
     @Test
     void checkSpendRepository() {
         welcomePage.open()

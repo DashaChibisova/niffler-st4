@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.annotation.TestUsers;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.WelcomePage;
 import guru.qa.niffler.page.message.SuccessMsg;

@@ -10,7 +10,7 @@ import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.utils.OauthUtils;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -97,7 +97,7 @@ public class ApiLoginExtension implements BeforeEachCallback, AfterTestExecution
   private static UserJson getCreatedUserForApiLogin(ExtensionContext extensionContext) {
     return ((List<UserJson>) extensionContext.getStore(CreateUserExtension.CREATE_USER_NAMESPACE).get(extensionContext.getUniqueId(), Map.class)
         .get(User.Point.INNER))
-        .getFirst();
+        .get(0);
   }
 
   @Override

@@ -1,17 +1,11 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.db.model.Authority;
-import guru.qa.niffler.db.model.AuthorityEntity;
-import guru.qa.niffler.db.model.CurrencyValues;
-import guru.qa.niffler.db.model.UserAuthEntity;
-import guru.qa.niffler.db.model.UserEntity;
+
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.jupiter.annotation.TestUsers;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.utils.DataUtils;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import guru.qa.niffler.model.userdata.UserJson;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -67,7 +61,7 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
     if (parameterContext.getParameter().getType().isAssignableFrom(UserJson[].class)) {
       return userJsons.stream().toList().toArray(new UserJson[0]);
     } else {
-      return userJsons.getFirst();
+      return userJsons.get(0);
     }
   }
 
