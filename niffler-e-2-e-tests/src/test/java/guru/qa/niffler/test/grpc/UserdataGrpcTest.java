@@ -1,13 +1,9 @@
 package guru.qa.niffler.test.grpc;
-
 import guru.qa.grpc.niffler.grpc.*;
-
 import org.junit.jupiter.api.Test;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 public class UserdataGrpcTest extends BaseUserdataGrpcTest {
 
@@ -28,7 +24,7 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
   }
 
   @Test
-  void checkPostUpdateUserInfo() { // если засетать нужно null
+  void checkPostUpdateUserInfo() {
 
     final User user = User.newBuilder()
             .setUsername("duck")
@@ -66,8 +62,6 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
     final User user = response.getUser(0);
 
     assertEquals(1, response.getUserList().size());
-
-
     assertEquals("dima", user.getUsername());
     assertEquals(CurrencyValues.RUB, user.getCurrency());
     assertEquals(FriendState.FRIEND, user.getFriendState());
@@ -82,8 +76,6 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
     final User user = response.getUser(0);
 
     assertEquals(1, response.getUserList().size());
-
-
     assertEquals("goose", user.getUsername());
     assertEquals(CurrencyValues.RUB, user.getCurrency());
     assertEquals(FriendState.INVITE_RECEIVED, user.getFriendState());
@@ -105,7 +97,6 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
     final User user = response.getUser(0);
 
     assertEquals(1, response.getUserList().size());
-
     assertEquals("parrot", user.getUsername());
     assertEquals(CurrencyValues.RUB, user.getCurrency());
     assertEquals(FriendState.FRIEND, user.getFriendState());
@@ -119,19 +110,13 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
             .build();
 
     final InvitationRequest invitationRequest = InvitationRequest.newBuilder()
-            .setUsername("3333666")
+            .setUsername("3333")
             .setInvitation(friend)
             .build();
 
     final UsersResponce response = blockingStubUser.postDeclineInvitation(invitationRequest);
-    final User user = response.getUser(0);
+    assertTrue(response.getUserList().isEmpty());
 
-    assertEquals(0, response.getUserList().size());
-
-
-//    assertEquals("parrot", user.getUsername());
-//    assertEquals(CurrencyValues.RUB, user.getCurrency());
-//    assertEquals(FriendState.FRIEND, user.getFriendState());
   }
 
   @Test
@@ -149,6 +134,22 @@ public class UserdataGrpcTest extends BaseUserdataGrpcTest {
     final User user = blockingStubUser.postAddFriend(invitationRequest);
 
     assertEquals("valentin_153", user.getUsername());
+    assertEquals(CurrencyValues.RUB, user.getCurrency());
+    assertEquals(FriendState.INVITE_SENT, user.getFriendState());
+  }
+
+  @Test
+  void checkDeleteRemoveFriend() {
+
+    final RemoveFriendRequest removeFriendRequest = RemoveFriendRequest.newBuilder()
+            .setUsername("lion")
+            .setUsername("parrot")
+            .build();
+
+    final UsersResponce usersResponce = blockingStubUser.deleteRemoveFriend(removeFriendRequest);
+    User user = usersResponce.getUserList().get(0);
+
+    assertEquals("lion", user.getUsername());
     assertEquals(CurrencyValues.RUB, user.getCurrency());
     assertEquals(FriendState.INVITE_SENT, user.getFriendState());
   }

@@ -12,6 +12,7 @@ import io.grpc.stub.StreamObserver;
 import jakarta.annotation.Nonnull;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -220,7 +221,8 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
         responseObserver.onCompleted();
     }
 
-    @Override //??
+    @Override
+    @Transactional
     public void postDeclineInvitation(InvitationRequest request,
                                       StreamObserver<UsersResponce> responseObserver) {
 
@@ -272,7 +274,8 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
         responseObserver.onCompleted();
     }
 
-    @Override //??
+    @Override
+    @Transactional
     public void deleteRemoveFriend(RemoveFriendRequest request,
                                    StreamObserver<UsersResponce> responseObserver) {
 
@@ -297,7 +300,8 @@ public class GrpcUserdataService extends NifflerUserdataServiceGrpc.NifflerUserd
                                 .setPhoto(convertToEmpty(e.getFriend().getPhoto()).toString())
                                 .setFriendState(e.isPending()
                                         ? guru.qa.grpc.niffler.grpc.FriendState.INVITE_SENT
-                                        : guru.qa.grpc.niffler.grpc.FriendState.FRIEND)                                .build())
+                                        : guru.qa.grpc.niffler.grpc.FriendState.FRIEND)
+                                .build())
                         .toList())
                 .build();
 

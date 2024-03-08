@@ -71,10 +71,3 @@ message FriendsEntity {
   User friendUser = 2;
   bool pending = 3;
 }
-
-//message NullableString {
-//  oneof kind {
-//    google.protobuf.NullValue null = 1;
-//    string firstname = 2;
-//  }
-//}
