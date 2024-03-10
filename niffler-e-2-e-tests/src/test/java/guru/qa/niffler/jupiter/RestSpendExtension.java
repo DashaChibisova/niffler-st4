@@ -59,7 +59,6 @@ public class RestSpendExtension extends SpendExtension implements BeforeEachCall
         }
     }
 
-    @Override
     protected SpendJson create(SpendJson spend) {
         try {
             return spendApi.addSpend(spend).execute().body();

@@ -25,6 +25,21 @@ public class DockerConfig implements Config {
   }
 
   @Override
+  public String userdataUrl() {
+    return "http://auth.niffler.dc:8089";
+  }
+
+  @Override
+  public String spendUrl() {
+    return "http://auth.niffler.dc:8093";
+  }
+
+  @Override
+  public String gatewayUrl() {
+    return null;
+  }
+
+  @Override
   public String jdbcHost() {
     return "niffler-all-db";
   }

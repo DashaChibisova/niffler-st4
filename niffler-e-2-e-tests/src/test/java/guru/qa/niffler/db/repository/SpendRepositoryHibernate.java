@@ -15,7 +15,7 @@ public class SpendRepositoryHibernate extends JpaService implements SpendReposit
 
     @Override
     public SpendEntity create(SpendEntity spend) {
-        persist(SPEND, spend.getCategory());
+//        persist(SPEND, spend.getCategory());
         persist(SPEND, spend);
         return spend;
     }
