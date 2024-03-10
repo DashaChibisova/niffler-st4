@@ -1,23 +1,25 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.db.model.Authority;
-import guru.qa.niffler.db.model.AuthorityEntity;
-import guru.qa.niffler.db.model.CurrencyValues;
-import guru.qa.niffler.db.model.UserAuthEntity;
-import guru.qa.niffler.db.model.UserEntity;
-import guru.qa.niffler.db.repository.UserRepository;
-import guru.qa.niffler.db.repository.UserRepositoryHibernate;
+import guru.qa.niffler.db.model.*;
+import guru.qa.niffler.db.repository.*;
+import guru.qa.niffler.jupiter.annotation.GenerateCategory;
+import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.utils.DataUtils;
 
 
-import java.util.Arrays;
+import java.util.*;
 
 public class DataBaseCreteUserExtension extends CreateUserExtension {
 
   private static UserRepository userRepository = new UserRepositoryHibernate();
+  private SpendRepository spendRepository = new SpendRepositoryHibernate();
+  private CategoryRepository categoryRepository = new CategoryRepositoryHibernate();
+
 
   @Override
   public UserJson createUser(TestUser user) {
@@ -61,18 +63,62 @@ public class DataBaseCreteUserExtension extends CreateUserExtension {
         null,
         new TestData(
             password,
-            null
+            null,
+                new ArrayList<>(),
+                new ArrayList<>()
         )
     );
   }
 
   @Override
   public UserJson createCategory(TestUser user, UserJson createdUser) {
-    return null;
+
+    GenerateCategory categoryData = user.categories();
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setUsername(createdUser.username());
+    categoryEntity.setCategory(categoryData.category());
+
+    CategoryEntity category = categoryRepository.createCategory(categoryEntity);
+
+    CategoryJson categoryJson = new CategoryJson(
+            category.getId(),
+            category.getCategory(),
+            category.getUsername()
+    );
+
+    createdUser.testData().categoryJson().add(categoryJson);
+    return createdUser;
   }
 
   @Override
   public UserJson createSpend(TestUser user, UserJson createdUser) {
-    return null;
+    GenerateSpend spendData = user.spend();
+
+    CategoryEntity categoryEntity = new CategoryEntity();
+    categoryEntity.setUsername(createdUser.username());
+    categoryEntity.setCategory(createdUser.testData().categoryJson().get(0).category());
+
+    SpendEntity spendEntity = new SpendEntity();
+    spendEntity.setUsername(createdUser.username());
+    spendEntity.setCategory(categoryEntity);
+    spendEntity.setCurrency(
+            guru.qa.niffler.model.currency.CurrencyValues.RUB);
+    spendEntity.setAmount(spendData.amount());
+    spendEntity.setDescription(spendData.description());
+
+    SpendEntity spend = spendRepository.create(spendEntity);
+
+    SpendJson spendJson = new SpendJson(
+            spend.getId(),
+            spend.getSpendDate(),
+            spend.getCategory().getCategory(),
+            spend.getCurrency(),
+            spend.getAmount(),
+            spend.getDescription(),
+            spend.getUsername()
+    );
+
+    createdUser.testData().spendJson().add(spendJson);
+    return createdUser;
   }
 }

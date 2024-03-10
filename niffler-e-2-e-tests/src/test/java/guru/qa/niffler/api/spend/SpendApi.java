@@ -1,7 +1,9 @@
 package guru.qa.niffler.api.spend;
 
 import guru.qa.niffler.model.currency.CurrencyValues;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
+
 import guru.qa.niffler.model.spend.StatisticJson;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -13,6 +15,9 @@ public interface SpendApi {
 
   @POST("/addSpend")
   Call<SpendJson> addSpend(@Body SpendJson spend);
+
+  @POST("/category")
+  Call<CategoryJson> addCategory(@Body CategoryJson category);
 
 
   @GET("/spends")

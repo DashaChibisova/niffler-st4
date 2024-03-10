@@ -54,7 +54,6 @@ public class DatabaseSpendExtension extends SpendExtension implements ParameterR
                 .get(extensionContext.getUniqueId(), SpendJson.class);
     }
 
-    @Override
     protected SpendJson create(SpendJson spend) {
 
         CategoryEntity userCategory = new CategoryEntity();

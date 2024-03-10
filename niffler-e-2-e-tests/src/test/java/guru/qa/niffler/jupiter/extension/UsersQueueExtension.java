@@ -88,7 +88,9 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecuti
         null,
         new TestData(
             password,
-            userType
+            userType,
+                null,
+                null
         )
     );
   }

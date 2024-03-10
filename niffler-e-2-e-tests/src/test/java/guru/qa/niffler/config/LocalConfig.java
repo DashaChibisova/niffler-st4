@@ -19,6 +19,21 @@ public class LocalConfig implements Config {
   }
 
   @Override
+  public String userdataUrl() {
+    return "http://127.0.0.1:8089";
+  }
+
+  @Override
+  public String spendUrl() {
+    return "http://127.0.0.1:8093";
+  }
+
+  @Override
+  public String gatewayUrl() {
+    return null;
+  }
+
+  @Override
   public String authUrl() {
     return "http://127.0.0.1:9000";
   }
