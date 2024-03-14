@@ -13,4 +13,10 @@ public @interface TestUser {
   String username() default "";
 
   String password() default "";
+
+  Friend friend() default @Friend(fake = true);
+
+  IncomeInvitation incomeInvitation() default @IncomeInvitation(fake = true);
+
+  OutcomeInvitation outcomeInvitation() default @OutcomeInvitation(fake = true);
 }

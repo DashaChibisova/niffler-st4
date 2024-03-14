@@ -7,6 +7,7 @@ import guru.qa.niffler.db.model.AuthorityEntity;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
+import guru.qa.niffler.model.userdata.FriendJson;
 import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -275,6 +276,26 @@ public class UserRepositoryJdbc implements UserRepository {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public UserEntity findByName(String name) {
+    return null;
+  }
+
+  @Override
+  public UserEntity addFriends(UUID username, UUID friend) {
+    return null;
+  }
+
+  @Override
+  public UserEntity incomeInvitation(UUID username, UUID friend) {
+    return null;
+  }
+
+  @Override
+  public UserEntity outcomeInvitation(UUID username, UUID friend) {
+    return null;
   }
 
   @Override

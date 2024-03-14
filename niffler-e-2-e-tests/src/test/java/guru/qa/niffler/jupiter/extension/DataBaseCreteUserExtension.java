@@ -7,8 +7,13 @@ import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
 import guru.qa.niffler.db.repository.UserRepository;
 import guru.qa.niffler.db.repository.UserRepositoryHibernate;
+import guru.qa.niffler.jupiter.annotation.Friend;
+import guru.qa.niffler.jupiter.annotation.IncomeInvitation;
+import guru.qa.niffler.jupiter.annotation.OutcomeInvitation;
 import guru.qa.niffler.jupiter.annotation.TestUser;
 import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.userdata.FriendJson;
+import guru.qa.niffler.model.userdata.FriendState;
 import guru.qa.niffler.model.userdata.UserJson;
 import guru.qa.niffler.utils.DataUtils;
 
@@ -21,49 +26,8 @@ public class DataBaseCreteUserExtension extends CreateUserExtension {
 
   @Override
   public UserJson createUser(TestUser user) {
-    String username = user.username().isEmpty()
-        ? DataUtils.generateRandomUsername()
-        : user.username();
-    String password = user.password().isEmpty()
-        ? "12345"
-        : user.password();
+    return createUserJson(user.username(),user.password());
 
-    UserAuthEntity userAuth = new UserAuthEntity();
-    userAuth.setUsername(username);
-    userAuth.setPassword(password);
-    userAuth.setEnabled(true);
-    userAuth.setAccountNonExpired(true);
-    userAuth.setAccountNonLocked(true);
-    userAuth.setCredentialsNonExpired(true);
-    AuthorityEntity[] authorities = Arrays.stream(Authority.values()).map(
-        a -> {
-          AuthorityEntity ae = new AuthorityEntity();
-          ae.setAuthority(a);
-          return ae;
-        }
-    ).toArray(AuthorityEntity[]::new);
-
-    userAuth.addAuthorities(authorities);
-
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUsername(username);
-    userEntity.setCurrency(CurrencyValues.RUB);
-
-    userRepository.createInAuth(userAuth);
-    userRepository.createInUserdata(userEntity);
-    return new UserJson(
-        userEntity.getId(),
-        userEntity.getUsername(),
-        userEntity.getFirstname(),
-        userEntity.getSurname(),
-        guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
-        userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
-        null,
-        new TestData(
-            password,
-            null
-        )
-    );
   }
 
   @Override
@@ -75,4 +39,124 @@ public class DataBaseCreteUserExtension extends CreateUserExtension {
   public UserJson createSpend(TestUser user, UserJson createdUser) {
     return null;
   }
+
+
+  @Override
+  public UserJson createFriend(Friend friend, UserJson createdUser) {
+    if(!friend.fake()) {
+      UserJson friendUser = createUserJson("", "");
+      UserEntity userEntity = userRepository.addFriends(createdUser.id(), friendUser.id());
+      return new UserJson(
+              userEntity.getId(),
+              userEntity.getUsername(),
+              userEntity.getFirstname(),
+              userEntity.getSurname(),
+              guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
+              userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
+              null,
+              new TestData(
+                      friendUser.testData().password(),
+                      null
+              )
+      );
+    }
+    return null;
+  }
+
+  @Override
+  public UserJson createIncomeInvitation(IncomeInvitation incomeInvitation, UserJson createdUser) {
+    if(!incomeInvitation.fake()) {
+      UserJson friendUser = createUserJson("", "");
+      UserEntity userEntity = userRepository.incomeInvitation(createdUser.id(), friendUser.id());
+      return new UserJson(
+              userEntity.getId(),
+              userEntity.getUsername(),
+              userEntity.getFirstname(),
+              userEntity.getSurname(),
+              guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
+              userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
+              null,
+              new TestData(
+                      friendUser.testData().password(),
+                      null
+              )
+      );
+    }
+    return null;
+  }
+
+  @Override
+  public UserJson createOutcomeInvitation(OutcomeInvitation outcomeInvitation, UserJson createdUser) {
+    if(!outcomeInvitation.fake()) {
+      UserJson friendUser = createUserJson("", "");
+      UserEntity userEntity = userRepository.incomeInvitation(createdUser.id(), friendUser.id());
+      return new UserJson(
+              userEntity.getId(),
+              userEntity.getUsername(),
+              userEntity.getFirstname(),
+              userEntity.getSurname(),
+              guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
+              userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
+              null,
+              new TestData(
+                      friendUser.testData().password(),
+                      null
+              )
+      );
+    }
+    return null;
+  }
+
+  @Override
+  public UserJson updateUser(TestUser user, UserJson createdUser) {
+
+    return null;
+  }
+
+  private UserJson createUserJson(String password, String username) {
+    String usernameNew = username.isEmpty()
+            ? DataUtils.generateRandomUsername()
+            : username;
+    String passwordNew = password.isEmpty()
+            ? "12345"
+            : password;
+
+    UserAuthEntity userAuth = new UserAuthEntity();
+    userAuth.setUsername(usernameNew);
+    userAuth.setPassword(passwordNew);
+    userAuth.setEnabled(true);
+    userAuth.setAccountNonExpired(true);
+    userAuth.setAccountNonLocked(true);
+    userAuth.setCredentialsNonExpired(true);
+    AuthorityEntity[] authorities = Arrays.stream(Authority.values()).map(
+            a -> {
+              AuthorityEntity ae = new AuthorityEntity();
+              ae.setAuthority(a);
+              return ae;
+            }
+    ).toArray(AuthorityEntity[]::new);
+
+    userAuth.addAuthorities(authorities);
+
+    UserEntity userEntity = new UserEntity();
+    userEntity.setUsername(usernameNew);
+    userEntity.setCurrency(CurrencyValues.RUB);
+
+    userRepository.createInAuth(userAuth);
+    userRepository.createInUserdata(userEntity);
+    return new UserJson(
+            userEntity.getId(),
+            userEntity.getUsername(),
+            userEntity.getFirstname(),
+            userEntity.getSurname(),
+            guru.qa.niffler.model.currency.CurrencyValues.valueOf(userEntity.getCurrency().name()),
+            userEntity.getPhoto() == null ? "" : new String(userEntity.getPhoto()),
+            null,
+            new TestData(
+                    passwordNew,
+                    null
+            )
+    );
+  }
+
 }

@@ -26,6 +26,7 @@ public class GqlRequestResolver implements ParameterResolver {
   @Override
   public GqlRequest resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
     GqlRequestFile annotation = AnnotationSupport.findAnnotation(parameterContext.getParameter(), GqlRequestFile.class).get();
+
     try (InputStream is = cl.getResourceAsStream(annotation.value())) {
       return om.readValue(is.readAllBytes(), GqlRequest.class);
     } catch (IOException e) {

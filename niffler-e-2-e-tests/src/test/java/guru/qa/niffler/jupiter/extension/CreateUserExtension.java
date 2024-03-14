@@ -1,10 +1,8 @@
 package guru.qa.niffler.jupiter.extension;
 
 
-import guru.qa.niffler.jupiter.annotation.ApiLogin;
-import guru.qa.niffler.jupiter.annotation.TestUser;
-import guru.qa.niffler.jupiter.annotation.TestUsers;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.*;
+import guru.qa.niffler.model.userdata.FriendJson;
 import guru.qa.niffler.model.userdata.UserJson;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -32,7 +30,16 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
     for (Map.Entry<User.Point, List<TestUser>> userInfo : usersForTest.entrySet()) {
       List<UserJson> usersForPoint = new ArrayList<>();
       for (TestUser testUser : userInfo.getValue()) {
-        usersForPoint.add(createUser(testUser));
+        UserJson user = createUser(testUser);
+        usersForPoint.add(user);
+
+        for (int i = 0; i < testUser.friend().count(); i++) {
+          usersForPoint.add(createFriend(testUser.friend(), user));
+        }
+
+        usersForPoint.add(createIncomeInvitation(testUser.incomeInvitation(), user));
+        usersForPoint.add(createOutcomeInvitation(testUser.outcomeInvitation(), user));
+
       }
       createdUsers.put(userInfo.getKey(), usersForPoint);
     }
@@ -45,6 +52,15 @@ public abstract class CreateUserExtension implements BeforeEachCallback, Paramet
   public abstract UserJson createCategory(TestUser user, UserJson createdUser);
 
   public abstract UserJson createSpend(TestUser user, UserJson createdUser);
+
+  public abstract UserJson createFriend(Friend friend, UserJson createdUser);
+
+  public abstract UserJson createIncomeInvitation(IncomeInvitation incomeInvitation, UserJson createdUser);
+
+  public abstract UserJson createOutcomeInvitation(OutcomeInvitation outcomeInvitation, UserJson createdUser);
+
+  public abstract UserJson updateUser(TestUser user, UserJson createdUser);
+
 
   @Override
   public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {

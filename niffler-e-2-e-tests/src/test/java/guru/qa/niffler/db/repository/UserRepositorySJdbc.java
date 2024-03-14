@@ -7,6 +7,7 @@ import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
 import guru.qa.niffler.db.sjdbc.UserAuthEntityResultSetExtractor;
 import guru.qa.niffler.db.sjdbc.UserEntityRowMapper;
+import guru.qa.niffler.model.userdata.FriendJson;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -208,5 +209,25 @@ public class UserRepositorySJdbc implements UserRepository {
 
       return user;
     });
+  }
+
+  @Override
+  public UserEntity findByName(String name) {
+    return null;
+  }
+
+  @Override
+  public UserEntity addFriends(UUID username, UUID friend) {
+    return null;
+  }
+
+  @Override
+  public UserEntity incomeInvitation(UUID username, UUID friend) {
+    return null;
+  }
+
+  @Override
+  public UserEntity outcomeInvitation(UUID username, UUID friend) {
+    return null;
   }
 }
