@@ -37,4 +37,9 @@ public class LocalConfig implements Config {
   public String currencyGrpcHost() {
     return "localhost";
   }
+
+  @Override
+  public String userdataGrpcHost() {
+    return "localhost";
+  }
 }

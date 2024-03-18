@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "niffler-currency.proto";
+import "google/protobuf/struct.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.niffler.grpc";
+option java_outer_classname = "NifflerUserdataProto";
+
+service NifflerUserdataService {
+  rpc PostUpdateUserInfo ( User) returns ( User) {}
+  rpc GetCurrentUser ( UserName) returns ( User) {}
+  rpc GetAllUsers( UserName) returns ( UsersResponce) {}
+
+  rpc GetFriends (FrendRequest) returns (UsersResponce) {}
+  rpc GetInvitations (UserName) returns (UsersResponce) {}
+  rpc PostAcceptInvitation (InvitationRequest) returns ( UsersResponce) {}
+  rpc PostDeclineInvitation (InvitationRequest) returns ( UsersResponce) {}
+  rpc PostAddFriend (InvitationRequest) returns ( User) {}
+  rpc DeleteRemoveFriend ( RemoveFriendRequest) returns ( UsersResponce) {}
+}
+
+message User{
+  string username = 1;
+  string firstname = 2;
+  string surname = 3;
+  CurrencyValues currency  = 4;
+  string photo = 5;
+  FriendState friendState = 6;
+}
+
+enum FriendState {
+  UNSPECIF = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
+}
+
+message UserName {
+  string username = 1;
+}
+
+message UsersResponce {
+  repeated User user = 1;
+}
+
+message FrendRequest {
+  string username = 1;
+  bool includePending = 2;
+}
+
+message InvitationRequest {
+  string username = 1;
+  Friend invitation = 2;
+}
+
+message Friend {
+  string username = 1;
+}
+
+message RemoveFriendRequest {
+  string username = 1;
+  string friendUsername = 2;
+}
+
+message FriendsEntity {
+  User user = 1;
+  User friendUser = 2;
+  bool pending = 3;
+}

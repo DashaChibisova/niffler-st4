@@ -22,6 +22,9 @@ sourceSets {
 }
 
 dependencies {
+    implementation project(':niffler-grpc-common')
+
+    implementation "net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
